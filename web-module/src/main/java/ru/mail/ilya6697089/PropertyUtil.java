@@ -1,0 +1,35 @@
+package ru.mail.ilya6697089;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
+import java.util.Properties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class PropertyUtil {
+
+    private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
+    private static final String VALUES_PROPERTY_FILE_LOCATION = "values.properties";
+
+    private Properties properties;
+
+    public PropertyUtil() {
+        this.properties = new Properties();
+        try {
+            InputStream propertiesStream = getClass().getClassLoader().getResourceAsStream(VALUES_PROPERTY_FILE_LOCATION);
+            if (propertiesStream != null) {
+                properties.load(propertiesStream);
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new IllegalArgumentException("Values property file is not found");
+        }
+    }
+
+    public String getProperty(String name) {
+        return properties.getProperty(name);
+    }
+
+}
